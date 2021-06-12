@@ -185,7 +185,6 @@ module.exports.trace = {
         loader: 'js',
       }
     })
->>>>>>> master
   }
 }
 

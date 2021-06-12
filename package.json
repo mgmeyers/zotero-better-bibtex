@@ -133,7 +133,6 @@
     "shelljs": "^0.8.4",
     "string-template": "^1.0.0",
     "task-easy": "^1.0.1",
-    "typescript": "^4.2.4",
     "ts-node": "^10.0.0",
     "tslib": "^2.3.0",
     "typescript": "^4.3.2",

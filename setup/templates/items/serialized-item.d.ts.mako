@@ -11,10 +11,10 @@ export interface Collection {
 }
 
 export interface Tag { tag: string, type?: number }
-export interface Creator { creatorType?: string, name?: string, firstName?: string, lastName?:string, fieldMode?: number, source?: string }
+export interface Creator { creatorType: string, name?: string, firstName?: string, lastName?:string, fieldMode?: number, source?: string }
 
 interface ItemBase {
-  key: string
+  itemKey: string
   itemID: number
   libraryID: number
   uri: string
@@ -28,7 +28,7 @@ export interface Note extends ItemBase {
   note: string
 }
 
-export interface Attachment extends ItemBase{
+export interface Attachment extends ItemBase {
   itemType: 'attachment'
 
   path: string
@@ -47,9 +47,11 @@ export interface Reference extends ItemBase {
   tags: Array<Tag>
   notes: Array<Note>
   attachments: Array<Attachment>
+
   raw: boolean
-  cachable?: boolean
   autoJournalAbbreviation?: string
+  $cacheable?: boolean
+  $unused?: Set<string>
 
   %for field in fields:
   ${field}: string

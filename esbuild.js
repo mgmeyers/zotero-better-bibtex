@@ -62,7 +62,7 @@ async function bundle(config) {
   else {
     target = `${config.outdir} [${config.entryPoints.join(', ')}]`
   }
-  console.log('** bundling', target)
+  console.log('* bundling', target)
   const meta = (await esbuild.build(config)).metafile
   if (typeof metafile === 'string') await fs.promises.writeFile(metafile, JSON.stringify(meta, null, 2))
 }
@@ -78,7 +78,7 @@ async function rebuild() {
   // plugin code
   await bundle({
     entryPoints: [ 'content/better-bibtex.ts' ],
-    plugins: [loader.patcher('setup/patches'), loader.bibertool, loader.pegjs, loader.__dirname, shims],
+    plugins: [loader.trace, loader.patcher('setup/patches'), loader.bibertool, loader.pegjs, loader.__dirname, shims],
     outdir: 'build/content',
     banner: { js: 'if (!Zotero.BetterBibTeX) {\n' },
     footer: { js: '\n}' },

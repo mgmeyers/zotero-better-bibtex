@@ -1,5 +1,5 @@
 import type { MarkupNode } from '../typings/markup'
-import { titleCased } from './csl-titlecase'
+import { titleCase as titleCased } from './csl'
 
 import parse5 = require('parse5/lib/parser')
 const htmlParser = new parse5({ sourceCodeLocationInfo: true })

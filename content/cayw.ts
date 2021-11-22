@@ -5,6 +5,7 @@ import { Formatter } from './cayw/formatter'
 import { TeXstudio } from './tex-studio'
 import * as escape from './escape'
 import { flash } from './flash'
+import { Citation } from './csl'
 
 Components.utils.import('resource://gre/modules/XPCOMUtils.jsm')
 
@@ -111,19 +112,6 @@ class Field {
 }
 
 type DocumentData = {
-}
-type Citation = {
-  id: number
-  locator: string
-  suppressAuthor: boolean
-  prefix: string
-  suffix: string
-  label: string
-  citekey: string
-
-  uri: string
-  itemType: string
-  title: string
 }
 /**
  * The Document class corresponds to a single word processing document.

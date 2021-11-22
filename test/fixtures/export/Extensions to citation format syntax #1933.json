@@ -9,7 +9,7 @@
     "preferences": {
       "DOIandURL": "doi",
       "citeCommand": "autocite",
-      "citekeyFormat": "[authors+;:replace=\\[^;\\]+,,regex:>1:discard] [authors1+;:replace=;.*,,regex:postfix=;ea] | [authors2+;]",
+      "citekeyFormat": "[style=apa]",
       "exportBraceProtection": false,
       "exportTitleCase": false,
       "importSentenceCase": "off",

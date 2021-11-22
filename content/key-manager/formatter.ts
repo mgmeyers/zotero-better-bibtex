@@ -30,6 +30,7 @@ import { sprintf } from 'sprintf-js'
 
 import { jieba, pinyin } from './chinese'
 import { kuroshiro } from './japanese'
+import { formatted_citation } from '../csl'
 
 import AJV from 'ajv'
 import { validator } from '../ajv'
@@ -662,6 +663,24 @@ class PatternFormatter {
   /** Capitalize all the significant words of the title, and concatenate them. For example, `An awesome paper on JabRef` will become `AnAwesomePaperJabref` */
   public $title() {
     return this.set((this.titleWords(this.item.title, { skipWords: true }) || []).join(' '))
+  }
+
+  public $style(style) {
+    style = `http://www.zotero.org/styles/${style}`
+    const item = {
+      id: this.item.itemID,
+      locator: '',
+      suppressAuthor: false,
+      prefix: '',
+      suffix: '',
+      label: '',
+      citekey: '',
+
+      uri: '',
+      itemType: this.item.itemType,
+      title: this.item.getField('title') as string,
+    }
+    return formatted_citation([item], { style })
   }
 
   private padYear(year: string, length): string {

@@ -8,6 +8,7 @@ import { getItemsAsync } from '../get-items-async'
 import { Preference } from '../../gen/preferences'
 import { log } from '../logger'
 import { fromEntries } from '../object'
+import { formatted_citation } from '../csl'
 
 import * as unicode_table from 'unicode2latex/tables/unicode.json'
 
@@ -260,17 +261,7 @@ export const Formatter = new class { // eslint-disable-line @typescript-eslint/n
 
     // items must be pre-loaded for the citation processor
     await getItemsAsync(citations.map(item => item.id))
-
-    const locale = format.locale ? format.locale : Zotero.Prefs.get('export.quickCopy.locale')
-    const csl = Zotero.Styles.get(format.id).getCiteProc(locale)
-    csl.updateItems(citations.map(item => item.id))
-
-    const citation = {
-      citationItems: citations.map(item => ({ ...item, 'suppress-author': item.suppressAuthor })),
-      properties: {},
-    }
-
-    return csl.previewCitationCluster(citation, [], [], format.contentType)
+    return formatted_citation(citations, format)
   }
 
   public async 'formatted-bibliography'(citations) {

@@ -218,7 +218,7 @@ export class API {
       case 1:
         return { oneOf: types }
       default:
-        return { oneOf : other.concat({ enum: consts }) }
+        return other.length ? { oneOf : other.concat({ enum: consts }) } : { enum: consts }
     }
   }
 }

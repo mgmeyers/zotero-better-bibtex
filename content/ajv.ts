@@ -1,6 +1,7 @@
 import betterAjvErrors from 'better-ajv-errors'
 
 export function validator(ajv, schema): (data: any) => string { // eslint-disable-line @typescript-eslint/explicit-module-boundary-types
+  schema = JSON.parse(JSON.stringify(schema))
   const ok = ajv.compile(schema)
   return function(data: any): string { // eslint-disable-line prefer-arrow/prefer-arrow-functions
     if (ok(data)) return ''

@@ -41,6 +41,21 @@ for (const [method, meta] of Object.entries(methods)) {
   (meta as unknown as any).validate = validator(ajv, meta.schema)
 }
 
+function update_style_method() {
+  const styles: string[] = []
+  for (const [styleID, style] of Object.entries(Zotero.Styles.getAll())) {
+    if ((style as any)._class === 'in-text') { // eslint-disable-line no-underscore-dangle
+      styles.push(styleID.replace(/.*\//, ''))
+    }
+  }
+  styles.sort()
+  const $style: any = methods.$style
+  if (JSON.stringify($style.schema.properties.style.enum || '') !== JSON.stringify(styles)) {
+    $style.schema.properties.style = { enum: styles }
+    $style.validate = validator(ajv, $style.schema)
+  }
+}
+
 function innerText(node): string {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   if (node.nodeName === '#text') return node.value
@@ -335,6 +350,7 @@ class PatternFormatter {
   }
 
   public parsePattern(pattern): { formatter: string, postfix: { start: number, format: string } } {
+    update_style_method()
     const formatter = (parser.parse(pattern, { sprintf, items, methods }) as { formatter: string, postfix: { start: number, format: string } })
     if (Preference.testing) {
       log.debug('formatter function:', formatter.formatter)
@@ -665,7 +681,8 @@ class PatternFormatter {
     return this.set((this.titleWords(this.item.title, { skipWords: true }) || []).join(' '))
   }
 
-  public $style(style) {
+  /** Use as `style=<id>`; returns the in-text citation for item in the given CSL style. This style must already be installed in Zotero */
+  public $style(style: string) {
     style = `http://www.zotero.org/styles/${style}`
     const item = {
       id: this.item.itemID,
@@ -680,7 +697,15 @@ class PatternFormatter {
       itemType: this.item.itemType,
       title: this.item.getField('title') as string,
     }
-    return formatted_citation([item], { style })
+    try {
+      let citation = formatted_citation([item], { style })
+      if (citation.startsWith('(') && citation.endsWith(')')) citation = citation.slice(1, -1)
+      return this.set(citation)
+    }
+    catch (err) { // style might not be installed anymore
+      log.debug('failed to format citekey using', style, ':', err)
+      throw { next: true } // eslint-disable-line no-throw-literal
+    }
   }
 
   private padYear(year: string, length): string {

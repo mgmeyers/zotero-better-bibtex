@@ -257,6 +257,7 @@ export const Translators = new class { // eslint-disable-line @typescript-eslint
     )
 
     const cache = caching && Cache.getCollection(translator.label)
+    log.debug('cache-rate:', translator.label, 'export, cache', cache ? 'enabled' : 'disabled')
 
     this.workers.total += 1
     const id = `${this.workers.total}`
@@ -357,6 +358,7 @@ export const Translators = new class { // eslint-disable-line @typescript-eslint
 
           }
           else {
+            log.debug('cache-rate', translator.label, 'export, cache store')
             cache.insert({...query, reference, metadata})
           }
           break
@@ -484,7 +486,7 @@ export const Translators = new class { // eslint-disable-line @typescript-eslint
       }
     }
     prepare.done()
-    log.debug('cache-rate: cache loaded')
+    log.debug('cache-rate: cache loaded,', { items: config.items.length, cached: Object.keys(config.cache).length)
 
     // if the average startup time is greater than the autoExportDelay, bump up the delay to prevent stall-cascades
     this.workers.startup += Math.ceil((Date.now() - start) / 1000) // eslint-disable-line no-magic-numbers

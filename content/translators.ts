@@ -257,7 +257,7 @@ export const Translators = new class { // eslint-disable-line @typescript-eslint
     )
 
     const cache = caching && Cache.getCollection(translator.label)
-    log.debug('cache-rate:', translator.label, 'export, cache', cache ? 'enabled' : 'disabled')
+    log.debug('cache-rate:', translator.label, 'export, cache', cache ? 'enabled' : 'disabled', { caching, preferences: job.preferences, cache: !!Cache.getCollection(translator.label) })
 
     this.workers.total += 1
     const id = `${this.workers.total}`
